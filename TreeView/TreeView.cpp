@@ -4,7 +4,12 @@
 
 #include "TreeViewModel.h"
 #include "EditDialog.h"
+#include "AddDialog.h"
 #include "Database.h"
+
+namespace {
+constexpr uint32_t addButtonShift = 10;
+}
 
 TreeView::TreeView(const QString &dbPath, QWidget *parent)
     : QTreeView(parent)
@@ -15,12 +20,29 @@ TreeView::TreeView(const QString &dbPath, QWidget *parent)
     }
 
     mModel = new TreeViewModel(mDatabase);
+    mAddButton = new QToolButton(this);
+    mAddButton->setFixedSize({30, 30});
+    mAddButton->setText("+");
+
     setHeaderHidden(true);
     setModel(mModel);
 
     connect(this, &QTreeView::doubleClicked, this, &TreeView::onDoubleClick);
+    connect(mAddButton, &QToolButton::clicked, this, &TreeView::onAddClicked);
     connect(mModel, &TreeViewModel::modelAboutToBeReset, this, &TreeView::onBeforeModelUpdate);
     connect(mModel, &TreeViewModel::modelReset, this, &TreeView::onModelUpdated);
+}
+
+void TreeView::resizeEvent(QResizeEvent *event)
+{
+    QTreeView::resizeEvent(event);
+
+    const QRect &geo = viewport()->geometry();
+    QPoint point = geo.bottomRight();
+    point.rx() -= mAddButton->width() + addButtonShift;
+    point.ry() -= mAddButton->height() + addButtonShift;
+
+    mAddButton->move(point);
 }
 
 void TreeView::onDoubleClick(const QModelIndex &index)
@@ -35,6 +57,12 @@ void TreeView::onDoubleClick(const QModelIndex &index)
     }
 
     EditDialog d(*operatorOpt, mDatabase, this);
+    d.exec();
+}
+
+void TreeView::onAddClicked()
+{
+    AddDialog d(mDatabase, this);
     d.exec();
 }
 
