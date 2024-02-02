@@ -3,6 +3,7 @@
 #include <QString>
 
 struct Operator {
+    uint32_t mcc = 0;
     uint32_t mnc = 0;
     QString name;
 };

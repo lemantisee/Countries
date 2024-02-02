@@ -83,5 +83,5 @@ void OperatorsSqlSelect::appendRow(const RowResult &row)
     country.mcc = row.mcc;
     country.code = row.code;
     country.name = row.countryName;
-    country.operators.emplace_back(row.mnc, row.operatorName);
+    country.operators.emplace_back(row.mcc, row.mnc, row.operatorName);
 }

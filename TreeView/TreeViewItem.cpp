@@ -7,6 +7,13 @@ TreeViewItem::TreeViewItem(QString text, TreeViewItem *parentItem)
     , mParentItem(parentItem)
 {}
 
+TreeViewItem::TreeViewItem(Operator op, TreeViewItem *parentItem)
+    : mParentItem(parentItem)
+    , mOperator(std::move(op))
+{
+    mText = QString("%1 (%2, %3)").arg(mOperator->name).arg(mOperator->mcc).arg(mOperator->mnc);
+}
+
 void TreeViewItem::appendChild(std::unique_ptr<TreeViewItem> child)
 {
     mChildren.push_back(std::move(child));
@@ -53,4 +60,9 @@ int TreeViewItem::row() const
     }
 
     return std::distance(mParentItem->mChildren.begin(), it);
+}
+
+std::optional<Operator> TreeViewItem::getOperator() const
+{
+    return mOperator;
 }

@@ -1,13 +1,15 @@
 #pragma once
 
 #include <QString>
-#include <vector>
+
+#include "CountryRecord.h"
 
 class TreeViewItem
 {
 public:
     TreeViewItem();
     TreeViewItem(QString text, TreeViewItem *parentItem);
+    TreeViewItem(Operator op, TreeViewItem *parentItem);
 
     void appendChild(std::unique_ptr<TreeViewItem> child);
 
@@ -17,8 +19,11 @@ public:
     int childCount() const;
     int row() const;
 
+    std::optional<Operator> getOperator() const;;
+
 private:
     QString mText;
     TreeViewItem *mParentItem = nullptr;
     std::vector<std::unique_ptr<TreeViewItem>> mChildren;
+    std::optional<Operator> mOperator;
 };

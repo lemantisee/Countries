@@ -45,6 +45,26 @@ bool Database::open()
     return true;
 }
 
+bool Database::renameOperator(uint32_t mmc, uint32_t mnc, const QString &newName)
+{
+    QString sql = QString("UPDATE operators SET name = '%1' WHERE mcc = %2 AND mnc = %3")
+                      .arg(newName)
+                      .arg(mmc)
+                      .arg(mnc);
+
+    char *zErrMsg = nullptr;
+    int rc = sqlite3_exec(mDB, sql.toStdString().c_str(), nullptr, nullptr, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        qCritical() << "Unable to update operator name. Error:" << zErrMsg;
+        sqlite3_free(zErrMsg);
+        return false;
+    }
+
+    emit updated();
+
+    return true;
+}
+
 std::vector<CountryRecord> Database::getCountries() const
 {
     OperatorsSqlSelect selectProcessor;

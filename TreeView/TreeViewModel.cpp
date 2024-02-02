@@ -1,17 +1,17 @@
 #include "TreeViewModel.h"
 
+#include <QCollator>
+
 #include "TreeViewItem.h"
 #include "Database.h"
 
-TreeViewModel::TreeViewModel(const QString &dbPath, QObject *parent)
+TreeViewModel::TreeViewModel(Database *database, QObject *parent)
     : QAbstractItemModel(parent)
-    , mDatabase(new Database(dbPath, parent))
+    , mDatabase(database)
 {
-    if (!mDatabase->open()) {
-        return;
-    }
+    updateModel();
 
-    buildModel();
+    connect(mDatabase, &Database::updated, this, &TreeViewModel::updateModel);
 }
 
 TreeViewModel::~TreeViewModel() = default;
@@ -86,17 +86,87 @@ QVariant TreeViewModel::data(const QModelIndex &index, int role) const
     return item->data();
 }
 
-void TreeViewModel::buildModel()
+bool TreeViewModel::isChild(const QModelIndex &index) const
 {
-    for (const CountryRecord &country: mDatabase->getCountries()) {
+    if (!index.isValid()) {
+        return false;
+    }
+
+    const TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
+    return item->parentItem() != nullptr;
+}
+
+std::optional<Operator> TreeViewModel::getOperator(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return std::nullopt;
+    }
+
+    const TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
+    return item->getOperator();
+}
+
+std::vector<QModelIndex> TreeViewModel::getTopItems() const
+{
+    std::vector<QModelIndex> list;
+    for (int r = 0; r < mTopItems.size(); ++r) {
+        const TreeViewItem *item = mTopItems[r].get();
+        list.push_back(createIndex(r, 0, item));
+    }
+
+    return list;
+}
+
+QString TreeViewModel::getCountryName(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return {};
+    }
+
+    const TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
+    if (item->parentItem()) {
+        return {};
+    }
+
+    return item->data();
+}
+
+QModelIndex TreeViewModel::getTopLevelIndex(const QString &country) const
+{
+    for (int r = 0; r < mTopItems.size(); ++r) {
+        const TreeViewItem *item = mTopItems[r].get();
+        if(item->data() == country) {
+            return createIndex(r, 0, item);
+        }
+    }
+
+    return {};
+}
+
+void TreeViewModel::updateModel()
+{
+    beginResetModel();
+
+    mTopItems.clear();
+
+    std::vector<CountryRecord> countries = mDatabase->getCountries();
+    std::sort(countries.begin(),
+              countries.end(),
+              [](const CountryRecord &lvl, const CountryRecord &rvl) {
+                  QCollator order;
+                  return order.compare(lvl.name, rvl.name) < 0;
+              });
+
+    for (const CountryRecord &country: countries) {
         auto topItem = std::make_unique<TreeViewItem>(country.name, nullptr);
 
         for (const Operator &op: country.operators) {
-            QString text = QString("%1 (%2, %3)").arg(op.name).arg(country.mcc).arg(op.mnc);
-            auto childItem = std::make_unique<TreeViewItem>(text, topItem.get());
+            auto childItem = std::make_unique<TreeViewItem>(op, topItem.get());
             topItem->appendChild(std::move(childItem));
         }
 
         mTopItems.push_back(std::move(topItem));
     }
+
+    endResetModel();
 }

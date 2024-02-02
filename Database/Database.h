@@ -14,8 +14,12 @@ public:
     ~Database();
 
     bool open();
+    bool renameOperator(uint32_t mmc, uint32_t mnc, const QString &newName);
 
     std::vector<CountryRecord> getCountries() const;
+
+signals:
+    void updated();
 
 private:
     sqlite3 *mDB = nullptr;
