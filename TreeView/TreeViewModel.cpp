@@ -1,10 +1,16 @@
 #include "TreeViewModel.h"
 
 #include "TreeViewItem.h"
+#include "Database.h"
 
-TreeViewModel::TreeViewModel(QObject *parent)
+TreeViewModel::TreeViewModel(const QString &dbPath, QObject *parent)
     : QAbstractItemModel(parent)
+    , mDatabase(new Database(dbPath, parent))
 {
+    if (!mDatabase->open()) {
+        return;
+    }
+
     buildModel();
 }
 
@@ -82,11 +88,12 @@ QVariant TreeViewModel::data(const QModelIndex &index, int role) const
 
 void TreeViewModel::buildModel()
 {
-    for (uint32_t i = 0; i < 5; ++i) {
-        auto topItem = std::make_unique<TreeViewItem>(QString::number(i), nullptr);
+    for (const CountryRecord &country: mDatabase->getCountries()) {
+        auto topItem = std::make_unique<TreeViewItem>(country.name, nullptr);
 
-        for (uint32_t j = 0; j < 3; ++j) {
-            auto childItem = std::make_unique<TreeViewItem>(QString::number(j), topItem.get());
+        for (const Operator &op: country.operators) {
+            QString text = QString("%1 (%2, %3)").arg(op.name).arg(country.mcc).arg(op.mnc);
+            auto childItem = std::make_unique<TreeViewItem>(text, topItem.get());
             topItem->appendChild(std::move(childItem));
         }
 

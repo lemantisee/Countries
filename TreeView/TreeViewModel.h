@@ -3,13 +3,14 @@
 #include <QAbstractItemModel>
 
 class TreeViewItem;
+class Database;
 
 class TreeViewModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    explicit TreeViewModel(QObject *parent = nullptr);
+    explicit TreeViewModel(const QString &dbPath, QObject *parent = nullptr);
     ~TreeViewModel();
 
     // Basic functionality:
@@ -24,5 +25,6 @@ public:
 private:
     void buildModel();
 
+    Database *mDatabase = nullptr;
     std::vector<std::unique_ptr<TreeViewItem>> mTopItems;
 };

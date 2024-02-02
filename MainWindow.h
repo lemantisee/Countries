@@ -12,5 +12,4 @@ public:
     MainWindow(QWidget *parent = nullptr);
 
 private:
-    Database *mDatabase = nullptr;
 };

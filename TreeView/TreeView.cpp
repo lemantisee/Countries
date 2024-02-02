@@ -2,9 +2,9 @@
 
 #include "TreeViewModel.h"
 
-TreeView::TreeView(QWidget *parent)
-    :QTreeView(parent)
+TreeView::TreeView(const QString &dbPath, QWidget *parent)
+    : QTreeView(parent)
 {
     setHeaderHidden(true);
-    setModel(new TreeViewModel);
+    setModel(new TreeViewModel(dbPath));
 }

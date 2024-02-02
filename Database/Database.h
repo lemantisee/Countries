@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include <string>
+#include "CountryRecord.h"
 
 struct sqlite3;
 
@@ -10,12 +10,14 @@ class Database : public QObject
 {
     Q_OBJECT
 public:
-    explicit Database(std::string_view filepath, QObject *parent = nullptr);
+    explicit Database(const QString &filepath, QObject *parent = nullptr);
     ~Database();
 
     bool open();
 
+    std::vector<CountryRecord> getCountries() const;
+
 private:
     sqlite3 *mDB = nullptr;
-    std::string mFilepath;
+    QString mFilepath;
 };
