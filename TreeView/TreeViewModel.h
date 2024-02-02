@@ -13,7 +13,6 @@ public:
     explicit TreeViewModel(const QString &dbPath, QObject *parent = nullptr);
     ~TreeViewModel();
 
-    // Basic functionality:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
 

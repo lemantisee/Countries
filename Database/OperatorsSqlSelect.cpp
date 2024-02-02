@@ -1,7 +1,6 @@
 #include "OperatorsSqlSelect.h"
 
-#include <unordered_map>
-// #include <QDebug>
+#include <QDebug>
 
 OperatorsSqlSelect::OperatorsSqlSelect() {}
 
@@ -18,7 +17,7 @@ bool OperatorsSqlSelect::processRow(int argc, char **argv, char **colName)
     for (int i = 0; i < argc; i++) {
         const char *value = argv[i];
         if (!value) {
-            // qCritical() << "Invalid value";
+            qCritical() << "Invalid value";
             return false;
         }
 
@@ -30,7 +29,7 @@ bool OperatorsSqlSelect::processRow(int argc, char **argv, char **colName)
             bool ok = false;
             int mccValue = valueStr.toInt(&ok);
             if (!ok) {
-                // qCritical() << "Invalid int value";
+                qCritical() << "Invalid int value";
                 return false;
             }
 
@@ -50,7 +49,7 @@ bool OperatorsSqlSelect::processRow(int argc, char **argv, char **colName)
             bool ok = false;
             int mncValue = valueStr.toInt(&ok);
             if (!ok) {
-                // qCritical() << "Invalid int value";
+                qCritical() << "Invalid int value";
                 return false;
             }
 

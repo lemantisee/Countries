@@ -16,41 +16,6 @@ int countriesTableCallback(void *data, int argc, char **argv, char **colName){
     }
 
     return 0;
-
-    // for(int i = 0; i<argc; i++){
-
-
-
-    //     const char *value = argv[i];
-    //     if (!value) {
-    //         return 1;
-    //     }
-
-
-
-    //     QString columnName = colName[i];
-    //     if (columnName == "mcc") {
-
-    //         QString valueStr = value;
-    //         bool ok = false;
-    //         int mcc = valueStr.toInt(&ok);
-    //         if (!ok) {
-    //             return 1;
-    //         }
-
-    //         *countryRow = resultMap[mcc];
-    //     }
-
-    //     if (!countryRow->addField(columnName, argv[i])) {
-    //         break;
-    //     }
-
-    //     if (columnName == "mnc_length") {
-    //         table->push_back(countryRow);
-    //     }
-    // }
-
-    // return 0;
 }
 }
 
@@ -83,7 +48,6 @@ bool Database::open()
 std::vector<CountryRecord> Database::getCountries() const
 {
     OperatorsSqlSelect selectProcessor;
-    // std::vector<CountryRecord> table;
     char *zErrMsg = nullptr;
 
     int rc = sqlite3_exec(mDB,
@@ -99,34 +63,3 @@ std::vector<CountryRecord> Database::getCountries() const
 
     return selectProcessor.getList();
 }
-
-// bool Country::addField(const QString &columnName, char *value)
-// {
-//     if (!value) {
-//         return false;
-//     }
-
-//     if (columnName == "mcc") {
-//         QString valueStr = value;
-//         bool ok = false;
-//         int mccValue = valueStr.toInt(&ok);
-//         if (!ok) {
-//             return false;
-//         }
-
-//         mcc = mccValue;
-//         return true;
-//     }
-
-//     if (columnName == "name") {
-//         name = value;
-//         return true;
-//     }
-
-//     if (columnName == "code") {
-//         code = value;
-//         return true;
-//     }
-
-//     return true;
-// }
