@@ -11,8 +11,6 @@ EditDialog::EditDialog(Operator op, Database *database, QWidget *parent)
 {
     setWindowTitle(tr("Operator editor"));
 
-    QFormLayout *form_l = new QFormLayout;
-
     mNameEdit = new QLineEdit;
     mNameEdit->setText(mOperator.name);
 
@@ -23,6 +21,8 @@ EditDialog::EditDialog(Operator op, Database *database, QWidget *parent)
     mMncEdit = new QLineEdit;
     mMncEdit->setReadOnly(true);
     mMncEdit->setText(QString::number(mOperator.mnc));
+
+    QFormLayout *form_l = new QFormLayout;
 
     form_l->addRow(tr("Name"), mNameEdit);
     form_l->addRow(tr("MCC"), mMccEdit);

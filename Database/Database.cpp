@@ -65,6 +65,26 @@ bool Database::renameOperator(uint32_t mmc, uint32_t mnc, const QString &newName
     return true;
 }
 
+bool Database::addOperator(uint32_t mmc, uint32_t mnc, const QString &name)
+{
+    QString sql = QString("INSERT INTO operators (mcc, mnc, name) VALUES (%1, %2, '%3')")
+                      .arg(mmc)
+                      .arg(mnc)
+                      .arg(name);
+
+    char *zErrMsg = nullptr;
+    int rc = sqlite3_exec(mDB, sql.toStdString().c_str(), nullptr, nullptr, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        qCritical() << "Unable to add new operator. Error:" << zErrMsg;
+        sqlite3_free(zErrMsg);
+        return false;
+    }
+
+    emit updated();
+
+    return true;
+}
+
 std::vector<CountryRecord> Database::getCountries() const
 {
     OperatorsSqlSelect selectProcessor;

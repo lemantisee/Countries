@@ -15,6 +15,7 @@ public:
 
     bool open();
     bool renameOperator(uint32_t mmc, uint32_t mnc, const QString &newName);
+    bool addOperator(uint32_t mmc, uint32_t mnc, const QString &name);
 
     std::vector<CountryRecord> getCountries() const;
 
