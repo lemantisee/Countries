@@ -6,6 +6,7 @@
 #include "EditDialog.h"
 #include "AddDialog.h"
 #include "Database.h"
+#include "ItemDelegate.h"
 
 namespace {
 constexpr uint32_t addButtonShift = 10;
@@ -26,6 +27,7 @@ TreeView::TreeView(const QString &dbPath, QWidget *parent)
 
     setHeaderHidden(true);
     setModel(mModel);
+    setItemDelegate(new ItemDelegate);
 
     connect(this, &QTreeView::doubleClicked, this, &TreeView::onDoubleClick);
     connect(mAddButton, &QToolButton::clicked, this, &TreeView::onAddClicked);

@@ -78,12 +78,18 @@ QVariant TreeViewModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (role != Qt::DisplayRole) {
-        return QVariant();
+    TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
+
+    switch (role) {
+    case Qt::DisplayRole:
+        return item->data();
+    case Qt::DecorationRole:
+        return item->getIcon();
+    default:
+        break;
     }
 
-    TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
-    return item->data();
+    return {};
 }
 
 bool TreeViewModel::isChild(const QModelIndex &index) const
@@ -158,7 +164,7 @@ void TreeViewModel::updateModel()
               });
 
     for (const CountryRecord &country: countries) {
-        auto topItem = std::make_unique<TreeViewItem>(country.name, nullptr);
+        auto topItem = std::make_unique<TreeViewItem>(country.name, country.code, nullptr);
 
         for (const Operator &op: country.operators) {
             auto childItem = std::make_unique<TreeViewItem>(op, topItem.get());

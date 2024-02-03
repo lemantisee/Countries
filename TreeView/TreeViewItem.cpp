@@ -1,11 +1,16 @@
 #include "TreeViewItem.h"
 
+#include "Icons.h"
+
 TreeViewItem::TreeViewItem() {}
 
-TreeViewItem::TreeViewItem(QString text, TreeViewItem *parentItem)
-    : mText(std::move(text))
+TreeViewItem::TreeViewItem(QString countryName, QString countryCode, TreeViewItem *parentItem)
+    : mText(std::move(countryName))
+    , mCountryCode(std::move(countryCode))
     , mParentItem(parentItem)
-{}
+{
+
+}
 
 TreeViewItem::TreeViewItem(Operator op, TreeViewItem *parentItem)
     : mParentItem(parentItem)
@@ -65,4 +70,13 @@ int TreeViewItem::row() const
 std::optional<Operator> TreeViewItem::getOperator() const
 {
     return mOperator;
+}
+
+QIcon TreeViewItem::getIcon() const
+{
+    if (mOperator) {
+        return Icons::getOperatorIcon(mOperator->mcc, mOperator->mnc);
+    }
+
+    return Icons::getCountryIcon(mCountryCode);
 }
