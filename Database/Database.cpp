@@ -85,7 +85,7 @@ bool Database::addOperator(uint32_t mmc, uint32_t mnc, const QString &name)
     return true;
 }
 
-std::vector<CountryRecord> Database::getCountries() const
+std::vector<CountryRecord> Database::getCountries()
 {
     OperatorsSqlSelect selectProcessor;
     char *zErrMsg = nullptr;
@@ -101,5 +101,26 @@ std::vector<CountryRecord> Database::getCountries() const
         return {};
     }
 
-    return selectProcessor.getList();
+    std::vector<CountryRecord> countries = selectProcessor.getList();
+
+    updateMccCodeMap(countries);
+
+    return countries;
+}
+
+QString Database::getCode(uint32_t mmc) const
+{
+    auto it = mMccToCodeMap.find(mmc);
+    return it == mMccToCodeMap.end() ? QString() : it->second;
+}
+
+void Database::updateMccCodeMap(const std::vector<CountryRecord> &records)
+{
+    mMccToCodeMap.clear();
+
+    for (const CountryRecord &country : records) {
+        for (const Operator &op : country.operators) {
+            mMccToCodeMap[op.mcc] = country.code;
+        }
+    }
 }

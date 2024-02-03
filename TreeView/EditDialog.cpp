@@ -3,13 +3,17 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QMessageBox>
+#include <QLabel>
+#include <QPixmap>
 
 #include "Database.h"
+#include "Icons.h"
 
 EditDialog::EditDialog(Operator op, Database *database, QWidget *parent)
     : QDialog(parent), mOperator(std::move(op)), mDatabase(database)
 {
     setWindowTitle(tr("Operator editor"));
+    setWindowIcon(Icons::getOperatorIcon(mOperator.mcc, mOperator.mnc));
 
     mNameEdit = new QLineEdit;
     mNameEdit->setText(mOperator.name);
@@ -25,7 +29,7 @@ EditDialog::EditDialog(Operator op, Database *database, QWidget *parent)
     QFormLayout *form_l = new QFormLayout;
 
     form_l->addRow(tr("Name"), mNameEdit);
-    form_l->addRow(tr("MCC"), mMccEdit);
+    form_l->addRow(tr("MCC"), createMccEdit());
     form_l->addRow(tr("MNC"), mMncEdit);
 
     QDialogButtonBox *btns = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Cancel);
@@ -45,15 +49,25 @@ void EditDialog::onAccept()
         return;
     }
 
-    if (mNameEdit->text().isEmpty()) {
-        QMessageBox::warning(this, tr("Error"), tr("Empty name not allowed"));
-        return;
-    }
-
     if (!mDatabase->renameOperator(mOperator.mcc, mOperator.mnc, mNameEdit->text())) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to change operator's name"));
         return;
     }
 
     accept();
+}
+
+QWidget *EditDialog::createMccEdit()
+{
+    const QString &code = mDatabase->getCode(mOperator.mcc);
+    auto *iconLabel = new QLabel;
+    iconLabel->setPixmap(Icons::getCountryIcon(code).pixmap({16, 16}));
+
+    QWidget *wrapper = new QWidget;
+    QHBoxLayout *wrapper_l = new QHBoxLayout(wrapper);
+    wrapper_l->setContentsMargins({});
+    wrapper_l->addWidget(mMccEdit);
+    wrapper_l->addWidget(iconLabel);
+
+    return wrapper;
 }

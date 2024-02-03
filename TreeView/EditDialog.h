@@ -15,6 +15,7 @@ public:
 
 private:
     void onAccept();
+    QWidget *createMccEdit();
 
     QLineEdit *mNameEdit = nullptr;
     QLineEdit *mMccEdit = nullptr;

@@ -14,7 +14,7 @@ public:
     CountryRecord() = default;
 
     QString name;
-    uint32_t mcc = 0;
+    // uint32_t mcc = 0;
     QString code;
 
     std::vector<Operator> operators;

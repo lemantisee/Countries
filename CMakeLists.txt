@@ -25,6 +25,8 @@ add_executable(${PROJECT_NAME}
     TreeView/TreeViewModel.h TreeView/TreeViewModel.cpp
     TreeView/EditDialog.h TreeView/EditDialog.cpp
     TreeView/AddDialog.h TreeView/AddDialog.cpp
+    Icons.h Icons.cpp
+    res.qrc
     )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt::Widgets)

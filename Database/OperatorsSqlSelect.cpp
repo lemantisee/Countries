@@ -80,7 +80,6 @@ std::vector<CountryRecord> OperatorsSqlSelect::getList() const
 void OperatorsSqlSelect::appendRow(const RowResult &row)
 {
     CountryRecord &country = mRecords[row.code];
-    country.mcc = row.mcc;
     country.code = row.code;
     country.name = row.countryName;
     country.operators.emplace_back(row.mcc, row.mnc, row.operatorName);
