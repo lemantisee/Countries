@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QDialog>
+#include "OperatorDialog.h"
 
 #include <QLineEdit>
 
@@ -8,19 +8,15 @@
 
 class Database;
 
-class EditDialog : public QDialog
+class EditDialog : public OperatorDialog
 {
 public:
     EditDialog(Operator op, Database *database, QWidget *parent = nullptr);
 
+protected:
+    void accepting() override;
+
 private:
-    void onAccept();
-    QWidget *createMccEdit();
-
-    QLineEdit *mNameEdit = nullptr;
-    QLineEdit *mMccEdit = nullptr;
-    QLineEdit *mMncEdit = nullptr;
-
     Operator mOperator;
     Database *mDatabase = nullptr;
 };

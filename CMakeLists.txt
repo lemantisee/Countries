@@ -26,6 +26,7 @@ add_executable(${PROJECT_NAME}
     TreeView/EditDialog.h TreeView/EditDialog.cpp
     TreeView/AddDialog.h TreeView/AddDialog.cpp
     TreeView/ItemDelegate.h TreeView/ItemDelegate.cpp
+    TreeView/OperatorDialog.h TreeView/OperatorDialog.cpp
 
     Icons.h Icons.cpp
     res.qrc
