@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QValidator>
+#include <QPushButton>
 
 #include "Database.h"
 #include "Icons.h"
@@ -32,6 +33,8 @@ OperatorDialog::OperatorDialog(Database *database, QWidget *parent)
     form_l->addRow(tr("MNC"), mMncEdit);
 
     QDialogButtonBox *btns = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Cancel);
+    mSaveButton = btns->button(QDialogButtonBox::Save);
+    mSaveButton->setEnabled(false);
 
     QVBoxLayout *main_l = new QVBoxLayout(this);
     main_l->addLayout(form_l);
@@ -39,9 +42,17 @@ OperatorDialog::OperatorDialog(Database *database, QWidget *parent)
 
     connect(btns, &QDialogButtonBox::accepted, this, &OperatorDialog::accepting);
     connect(btns, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    connect(mMccEdit, &QLineEdit::textChanged, this, &OperatorDialog::updateIcons);
+
+    connect(mNameEdit, &QLineEdit::textChanged, this, [this](const QString &){
+        validate();
+    });
+    connect(mMccEdit, &QLineEdit::textChanged, this, [this](const QString &){
+        validate();
+        updateIcons({});
+    });
     connect(mMncEdit, &QLineEdit::textChanged, this, &OperatorDialog::updateIcons);
 
+    validate();
     updateIcons({});
 }
 
@@ -102,4 +113,21 @@ uint32_t OperatorDialog::getMnc() const
 QString OperatorDialog::getName() const
 {
     return mNameEdit->text();
+}
+
+void OperatorDialog::validate()
+{
+    mSaveButton->setEnabled(true);
+    mNameEdit->setStyleSheet({});
+    mMccEdit->setStyleSheet({});
+
+    if (mNameEdit->text().isEmpty()) {
+        mNameEdit->setStyleSheet("border: 1px solid red");
+        mSaveButton->setEnabled(false);
+    }
+
+    if (mDatabase->getCode(getMcc()).isEmpty()) {
+        mMccEdit->setStyleSheet("border: 1px solid red");
+        mSaveButton->setEnabled(false);
+    }
 }

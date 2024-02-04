@@ -24,6 +24,7 @@ protected:
     QString getName() const;
 
 private:
+    void validate();
     QWidget *createMccEdit();
     void updateIcons(const QString &);
 
@@ -31,6 +32,7 @@ private:
     QLineEdit *mMccEdit = nullptr;
     QLineEdit *mMncEdit = nullptr;
     QLabel *mIconLabel = nullptr;
+    QPushButton *mSaveButton = nullptr;
 
     Database *mDatabase = nullptr;
 };
