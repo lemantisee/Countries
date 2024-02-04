@@ -85,6 +85,10 @@ QVariant TreeViewModel::data(const QModelIndex &index, int role) const
         return item->data();
     case Qt::DecorationRole:
         return item->getIcon();
+    case ButtonGeometry:
+        return item->getButtonGeo();
+    case ButtonState:
+        return int(item->getButtonState());
     default:
         break;
     }
@@ -175,4 +179,29 @@ void TreeViewModel::updateModel()
     }
 
     endResetModel();
+}
+
+bool TreeViewModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid()) {
+        return false;
+    }
+
+    TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
+    if (!item->parentItem()) {
+        return false;
+    }
+
+    switch (role) {
+    case ButtonGeometry:
+        item->setButtonGeo(value.toRect());
+        return true;
+    case ButtonState:
+        item->setButtonState(value.value<QStyle::StateFlag>());
+        return true;
+    default:
+        break;
+    }
+
+    return false;
 }

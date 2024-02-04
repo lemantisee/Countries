@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <QIcon>
+#include <QStyle>
 
 #include "CountryRecord.h"
 
@@ -13,6 +14,8 @@ public:
     TreeViewItem(Operator op, TreeViewItem *parentItem);
 
     void appendChild(std::unique_ptr<TreeViewItem> child);
+    void setButtonGeo(QRect rect);
+    void setButtonState(QStyle::State state);
 
     QString data() const;
     TreeViewItem *parentItem() const;
@@ -21,6 +24,8 @@ public:
     int row() const;
     std::optional<Operator> getOperator() const;
     QIcon getIcon() const;
+    QRect getButtonGeo() const;
+    QStyle::State getButtonState() const;
 
 private:
     QString mText;
@@ -28,4 +33,6 @@ private:
     TreeViewItem *mParentItem = nullptr;
     std::vector<std::unique_ptr<TreeViewItem>> mChildren;
     std::optional<Operator> mOperator;
+    QRect mButtonGeo;
+    QStyle::State mButtonState = QStyle::State_Enabled;
 };

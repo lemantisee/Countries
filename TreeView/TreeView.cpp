@@ -20,19 +20,27 @@ TreeView::TreeView(const QString &dbPath, QWidget *parent)
         return;
     }
 
-    mModel = new TreeViewModel(mDatabase);
+    mModel = new TreeViewModel(mDatabase, this);
     mAddButton = new QToolButton(this);
     mAddButton->setFixedSize({30, 30});
     mAddButton->setText("+");
 
     setHeaderHidden(true);
     setModel(mModel);
-    setItemDelegate(new ItemDelegate);
+    auto *delegate = new ItemDelegate(mModel);
+    setItemDelegate(delegate);
 
     connect(this, &QTreeView::doubleClicked, this, &TreeView::onDoubleClick);
     connect(mAddButton, &QToolButton::clicked, this, &TreeView::onAddClicked);
     connect(mModel, &TreeViewModel::modelAboutToBeReset, this, &TreeView::onBeforeModelUpdate);
     connect(mModel, &TreeViewModel::modelReset, this, &TreeView::onModelUpdated);
+    connect(delegate, &ItemDelegate::buttonClicked, this, &TreeView::onButtonClicked);
+    connect(delegate,
+            &ItemDelegate::needUpdate,
+            this,
+            qOverload<const QModelIndex &>(&QTreeView::update));
+
+    setMouseTracking(true);
 }
 
 void TreeView::resizeEvent(QResizeEvent *event)
@@ -62,6 +70,13 @@ void TreeView::onDoubleClick(const QModelIndex &index)
     d.exec();
 }
 
+void TreeView::onButtonClicked(const QModelIndex &index)
+{
+    if (auto op = mModel->getOperator(index)) {
+        onOperatorClicked(op->mcc, op->mnc);
+    }
+}
+
 void TreeView::onAddClicked()
 {
     AddDialog d(mDatabase, this);
@@ -89,4 +104,9 @@ void TreeView::onModelUpdated()
     }
 
     mExpandedItems.clear();
+}
+
+void TreeView::onOperatorClicked(int mcc, int mnc)
+{
+    qDebug() << "mcc" << mcc << "mnc" << mnc;
 }

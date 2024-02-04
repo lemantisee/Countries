@@ -18,9 +18,11 @@ protected:
 
 private:
     void onDoubleClick(const QModelIndex &index);
+    void onButtonClicked(const QModelIndex &index);
     void onAddClicked();
     void onBeforeModelUpdate();
     void onModelUpdated();
+    void onOperatorClicked(int mcc, int mnc);
 
     TreeViewModel *mModel = nullptr;
     Database *mDatabase = nullptr;

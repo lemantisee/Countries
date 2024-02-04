@@ -9,7 +9,6 @@ TreeViewItem::TreeViewItem(QString countryName, QString countryCode, TreeViewIte
     , mCountryCode(std::move(countryCode))
     , mParentItem(parentItem)
 {
-
 }
 
 TreeViewItem::TreeViewItem(Operator op, TreeViewItem *parentItem)
@@ -22,6 +21,16 @@ TreeViewItem::TreeViewItem(Operator op, TreeViewItem *parentItem)
 void TreeViewItem::appendChild(std::unique_ptr<TreeViewItem> child)
 {
     mChildren.push_back(std::move(child));
+}
+
+void TreeViewItem::setButtonGeo(QRect rect)
+{
+    mButtonGeo = std::move(rect);
+}
+
+void TreeViewItem::setButtonState(QStyle::State state)
+{
+    mButtonState = state;
 }
 
 QString TreeViewItem::data() const
@@ -79,4 +88,14 @@ QIcon TreeViewItem::getIcon() const
     }
 
     return Icons::getCountryIcon(mCountryCode);
+}
+
+QRect TreeViewItem::getButtonGeo() const
+{
+    return mButtonGeo;
+}
+
+QStyle::State TreeViewItem::getButtonState() const
+{
+    return mButtonState;
 }

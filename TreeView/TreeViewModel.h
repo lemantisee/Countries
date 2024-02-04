@@ -14,16 +14,20 @@ class TreeViewModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    enum Roles {
+        ButtonGeometry = Qt::UserRole + 1,
+        ButtonState,
+    };
+
     explicit TreeViewModel(Database *database, QObject *parent = nullptr);
     ~TreeViewModel();
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     bool isChild(const QModelIndex &index) const;
     std::optional<Operator> getOperator(const QModelIndex &index) const;
