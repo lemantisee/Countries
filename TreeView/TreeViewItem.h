@@ -9,11 +9,9 @@
 class TreeViewItem
 {
 public:
-    TreeViewItem();
-    TreeViewItem(QString countryName, QString countryCode, TreeViewItem *parentItem);
+    TreeViewItem(const CountryRecord &country);
     TreeViewItem(Operator op, TreeViewItem *parentItem);
 
-    void appendChild(std::unique_ptr<TreeViewItem> child);
     void setButtonGeo(QRect rect);
     void setButtonState(QStyle::State state);
 

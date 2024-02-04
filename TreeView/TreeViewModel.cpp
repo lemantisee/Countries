@@ -19,7 +19,7 @@ TreeViewModel::~TreeViewModel() = default;
 QModelIndex TreeViewModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent)) {
-        return QModelIndex();
+        return {};
     }
 
     TreeViewItem *item = nullptr;
@@ -29,7 +29,7 @@ QModelIndex TreeViewModel::index(int row, int column, const QModelIndex &parent)
         item = parentItem->child(row);
     } else {
         if (row < 0 || row >= mTopItems.size()) {
-            return QModelIndex();
+            return {};
         }
 
         item = mTopItems[row].get();
@@ -41,7 +41,7 @@ QModelIndex TreeViewModel::index(int row, int column, const QModelIndex &parent)
 QModelIndex TreeViewModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid()) {
-        return QModelIndex();
+        return {};
     }
 
     const TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
@@ -50,7 +50,7 @@ QModelIndex TreeViewModel::parent(const QModelIndex &index) const
         return createIndex(parentItem->row(), 0, parentItem);
     }
 
-    return QModelIndex();
+    return {};
 }
 
 int TreeViewModel::rowCount(const QModelIndex &parent) const
@@ -63,7 +63,7 @@ int TreeViewModel::rowCount(const QModelIndex &parent) const
         return mTopItems.size();
     }
 
-    TreeViewItem *parentItem = static_cast<TreeViewItem *>(parent.internalPointer());
+    const TreeViewItem *parentItem = static_cast<TreeViewItem *>(parent.internalPointer());
     return parentItem->childCount();
 }
 
@@ -75,10 +75,10 @@ int TreeViewModel::columnCount(const QModelIndex &parent) const
 QVariant TreeViewModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
-        return QVariant();
+        return {};
     }
 
-    TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
+    const TreeViewItem *item = static_cast<TreeViewItem *>(index.internalPointer());
 
     switch (role) {
     case Qt::DisplayRole:
@@ -168,13 +168,7 @@ void TreeViewModel::updateModel()
               });
 
     for (const CountryRecord &country: countries) {
-        auto topItem = std::make_unique<TreeViewItem>(country.name, country.code, nullptr);
-
-        for (const Operator &op: country.operators) {
-            auto childItem = std::make_unique<TreeViewItem>(op, topItem.get());
-            topItem->appendChild(std::move(childItem));
-        }
-
+        auto topItem = std::make_unique<TreeViewItem>(country);
         mTopItems.push_back(std::move(topItem));
     }
 

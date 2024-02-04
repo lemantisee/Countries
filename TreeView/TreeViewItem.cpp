@@ -2,13 +2,14 @@
 
 #include "Icons.h"
 
-TreeViewItem::TreeViewItem() {}
-
-TreeViewItem::TreeViewItem(QString countryName, QString countryCode, TreeViewItem *parentItem)
-    : mText(std::move(countryName))
-    , mCountryCode(std::move(countryCode))
-    , mParentItem(parentItem)
+TreeViewItem::TreeViewItem(const CountryRecord &country)
+    : mText(country.name)
+    , mCountryCode(country.code)
 {
+    for (const Operator &op : country.operators) {
+        auto childItem = std::make_unique<TreeViewItem>(op, this);
+        mChildren.push_back(std::move(childItem));
+    }
 }
 
 TreeViewItem::TreeViewItem(Operator op, TreeViewItem *parentItem)
@@ -16,11 +17,6 @@ TreeViewItem::TreeViewItem(Operator op, TreeViewItem *parentItem)
     , mOperator(std::move(op))
 {
     mText = QString("%1 (%2, %3)").arg(mOperator->name).arg(mOperator->mcc).arg(mOperator->mnc);
-}
-
-void TreeViewItem::appendChild(std::unique_ptr<TreeViewItem> child)
-{
-    mChildren.push_back(std::move(child));
 }
 
 void TreeViewItem::setButtonGeo(QRect rect)
