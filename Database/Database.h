@@ -19,6 +19,7 @@ public:
 
     std::vector<CountryRecord> getCountries();
     QString getCode(uint32_t mmc) const;
+    bool isOpened() const;
 
 signals:
     void updated();
@@ -26,6 +27,7 @@ signals:
 private:
     void updateMccCodeMap(const std::vector<CountryRecord> &records);
 
+    bool mOpened = false;
     sqlite3 *mDB = nullptr;
     QString mFilepath;
     std::map<uint32_t, QString> mMccToCodeMap;

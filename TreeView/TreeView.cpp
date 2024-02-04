@@ -1,6 +1,7 @@
 #include "TreeView.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 #include "TreeViewModel.h"
 #include "EditDialog.h"
@@ -12,12 +13,13 @@ namespace {
 constexpr uint32_t addButtonShift = 10;
 }
 
-TreeView::TreeView(const QString &dbPath, QWidget *parent)
+TreeView::TreeView(QWidget *parent)
     : QTreeView(parent)
-    , mDatabase(new Database(dbPath, this))
+    , mDatabase(new Database("system.db", this))
 {
     if (!mDatabase->open()) {
-        return;
+        QMessageBox::critical(this, tr("Error"), tr("Unable to open data base file"));
+        setEnabled(false);
     }
 
     mModel = new TreeViewModel(mDatabase, this);

@@ -11,7 +11,7 @@ class TreeView : public QTreeView
 {
     Q_OBJECT
 public:
-    TreeView(const QString &dbPath, QWidget *parent = nullptr);
+    TreeView(QWidget *parent = nullptr);
 
 protected:
     void resizeEvent(QResizeEvent *event);

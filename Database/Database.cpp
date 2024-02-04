@@ -1,6 +1,7 @@
 #include "Database.h"
 
 #include <QDebug>
+#include <QFileInfo>
 
 #include "sqlite3.h"
 #include "OperatorsSqlSelect.h"
@@ -35,6 +36,11 @@ Database::~Database()
 
 bool Database::open()
 {
+    if (!QFileInfo::exists(mFilepath)){
+        qCritical() << "Unable to find data base file" << mFilepath;
+        return false;
+    }
+
     if (int rc = sqlite3_open(mFilepath.toStdString().c_str(), &mDB); rc != SQLITE_OK) {
         qCritical() << "Unable to open database file " << mFilepath.toStdString().c_str()
                     << ". Error:" << sqlite3_errmsg(mDB);
