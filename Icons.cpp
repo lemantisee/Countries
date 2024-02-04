@@ -4,21 +4,18 @@
 
 namespace {
 Icons *instance = nullptr;
-
-const QString operatorFolder = "Icons/Operators";
-const QString countryFolder = "Icons/Countries";
 }
 
 QIcon Icons::getOperatorIcon(uint32_t mcc, uint32_t mnc)
 {
     QString filename = QString("%1_%2.png").arg(mcc).arg(mnc);
-    return getInstance().loadIcon(operatorFolder + "/" + filename);
+    return getInstance().loadIcon("Icons/" + filename);
 }
 
 QIcon Icons::getCountryIcon(const QString &code)
 {
     QString filename = code + ".png";
-    return getInstance().loadIcon(countryFolder + "/" + filename);
+    return getInstance().loadIcon("Icons/" + filename);
 }
 
 Icons &Icons::getInstance()
