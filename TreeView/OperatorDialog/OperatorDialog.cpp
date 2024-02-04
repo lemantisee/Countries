@@ -21,10 +21,12 @@ OperatorDialog::OperatorDialog(Database *database, QWidget *parent)
     mMccEdit = new QLineEdit;
     mMccEdit->setValidator(new QIntValidator(0, 32765, this));
     mMccEdit->setText("0");
+    mMccEdit->setReadOnly(true);
 
     mMncEdit = new QLineEdit;
     mMncEdit->setValidator(new QIntValidator(0, 32765, this));
     mMncEdit->setText("0");
+    mMncEdit->setReadOnly(true);
 
     QFormLayout *form_l = new QFormLayout;
 
@@ -69,6 +71,12 @@ void OperatorDialog::setMnc(uint32_t mnc)
 void OperatorDialog::setName(const QString &name)
 {
     mNameEdit->setText(name);
+}
+
+void OperatorDialog::enableEditing(bool state)
+{
+    mMccEdit->setReadOnly(!state);
+    mMncEdit->setReadOnly(!state);
 }
 
 QWidget *OperatorDialog::createMccEdit()

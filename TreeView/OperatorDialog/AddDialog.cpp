@@ -7,7 +7,9 @@
 AddDialog::AddDialog(Database *database, QWidget *parent)
     : OperatorDialog(database, parent)
     , mDatabase(database)
-{}
+{
+    enableEditing(true);
+}
 
 void AddDialog::accepting()
 {

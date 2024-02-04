@@ -18,6 +18,7 @@ protected:
     void setMcc(uint32_t mcc);
     void setMnc(uint32_t mnc);
     void setName(const QString &name);
+    void enableEditing(bool state);
 
     uint32_t getMcc() const;
     uint32_t getMnc() const;
