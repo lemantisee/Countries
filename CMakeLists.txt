@@ -23,10 +23,11 @@ add_executable(${PROJECT_NAME}
     TreeView/TreeView.h TreeView/TreeView.cpp
     TreeView/TreeViewItem.h TreeView/TreeViewItem.cpp
     TreeView/TreeViewModel.h TreeView/TreeViewModel.cpp
-    TreeView/EditDialog.h TreeView/EditDialog.cpp
-    TreeView/AddDialog.h TreeView/AddDialog.cpp
     TreeView/ItemDelegate.h TreeView/ItemDelegate.cpp
-    TreeView/OperatorDialog.h TreeView/OperatorDialog.cpp
+
+    TreeView/OperatorDialog/AddDialog.h TreeView/OperatorDialog/AddDialog.cpp
+    TreeView/OperatorDialog/EditDialog.h TreeView/OperatorDialog/EditDialog.cpp
+    TreeView/OperatorDialog/OperatorDialog.h TreeView/OperatorDialog/OperatorDialog.cpp
 
     Icons.h Icons.cpp
     res.qrc
@@ -38,6 +39,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/TreeView
     ${CMAKE_CURRENT_SOURCE_DIR}/Database
+    ${CMAKE_CURRENT_SOURCE_DIR}/TreeView/OperatorDialog
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
